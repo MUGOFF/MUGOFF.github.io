@@ -3,10 +3,27 @@
       const params = new URLSearchParams(window.location.search);
       const youtubeUrl = params.get('youtube'); // 예: ?youtube=https://www.youtube.com/watch?v=dQw4w9WgXcQ
 
-      if (youtubeUrl && youtubeUrl.startsWith('https://')) {
-        window.location.href = youtubeUrl;
+      if (youtubeUrl) {
+        // 유튜브 영상 ID 추출
+        const match = youtubeUrl.match(/v=([a-zA-Z0-9_-]+)/);
+        const videoId = match ? match[1] : null;
+
+        if (videoId) {
+          // 유튜브 앱용 딥링크 생성
+          const appLink = `youtube://watch?v=${videoId}`;
+
+          // 앱으로 리다이렉트 시도
+          window.location.href = appLink;
+
+          // 앱 리다이렉트 실패(앱 미설치 등) 대비해 1초 후 웹으로 이동
+          setTimeout(() => {
+            window.location.href = `https://www.youtube.com/watch?v=${videoId}`;
+          }, 1000);
+        } else {
+          document.body.innerHTML = '<h1>올바른 유튜브 URL이 아닙니다.</h1>';
+        }
       } else {
-        document.body.innerHTML = '<h1>유효한 유튜브 URL이 없습니다.</h1>';
+        document.body.innerHTML = '<h1>유튜브 URL이 필요합니다.</h1>';
       }
     }
   </script><link href="/css/app.adb4ff96.css" rel="stylesheet"><link rel="icon" type="image/svg+xml" href="/img/icons/favicon.svg"><link rel="icon" type="image/png" sizes="32x32" href="/img/icons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/img/icons/favicon-16x16.png"><link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#4DBA87"><meta name="apple-mobile-web-app-capable" content="no"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="manual_project"><link rel="apple-touch-icon" href="/img/icons/apple-touch-icon-152x152.png"><link rel="mask-icon" href="/img/icons/safari-pinned-tab.svg" color="#4DBA87"><meta name="msapplication-TileImage" content="/img/icons/msapplication-icon-144x144.png"><meta name="msapplication-TileColor" content="#000000"></head><body><noscript><strong>We're sorry but manual_project doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div></body></html>
